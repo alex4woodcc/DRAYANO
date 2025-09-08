@@ -1,0 +1,253 @@
+# Drayano Gauntlet Companion — Replit Build Prompt (Supabase, 4 Games, Dark/Responsive)
+
+**You are an expert full-stack builder. Create a production-ready web app that cleanly consumes the attached Supabase DB using ONLY the approved views in the DB contract. Prioritize correctness, resilience, accessibility, and a delightful dark-mode + responsive UI/UX.**
+
+## Goals
+
+- Browse **Pokédex** (list + per-Pokémon details), **Trainers** (list + pre-aggregated team details), and **Encounters** (per-route, ordered, with rates/levels).
+    
+- Seamlessly **switch among 4 games**: `FRO`, `SG`, `RP`, `VW2` (visible selector and deep-linkable URLs).
+    
+- Deliver a **modern dark-mode**, **mobile-first** layout with excellent keyboard/screen-reader accessibility, crisp typography, and clear information hierarchy.
+    
+- Keep the implementation flexible (you choose the stack), but **everything must work end-to-end** with our Supabase project.
+    
+
+> Use Replit **Secrets** for environment variables; do not hard-code them. 
+> Ensure data reads are protected by Postgres Row Level Security (the anon client should read contract views only). 
+
+---
+
+## Environment & Secrets (set in Replit Secrets)
+
+**Required (client-side reads):**
+
+- `VITE_SUPABASE_URL=https://cqmznchobvvltfvckmmr.supabase.co`
+    
+- `VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxbXpuY2hvYnZ2bHRmdmNrbW1yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMzc1MTAsImV4cCI6MjA3MTkxMzUxMH0.4V2VYMSys08o82cznRopjFYG2BsEER0U31_O0bVGE3w`
+    
+
+**Optional (server-only utilities; never shipped to browser):**
+
+- `POSTGRES_SESSION_URL=postgresql://postgres.cqmznchobvvltfvckmmr:Bj4E2Dn6vObnYNif@aws-1-us-east-2.pooler.supabase.com:5432/postgres`
+    
+- `POSTGRES_TRANSACTION_URL=postgresql://postgres.cqmznchobvvltfvckmmr:Bj4E2Dn6vObnYNif@aws-1-us-east-2.pooler.supabase.com:6543/postgres`
+    
+
+**Notes**
+
+- Initialize Supabase with the official client (browser) and the anon key. [
+    
+- Never expose service keys to the browser. Keep PG URLs server-side if you add a health check tool.
+    
+
+---
+
+## **Authoritative Data Contract (Read-only)**
+
+**Use these views only** (no base tables in client code):
+
+- **Pokédex (list)**: `public.v_pokedex_app`  
+    Purpose: game-scoped list with identity, labels, types, and sprites.  
+    Filter: `game_id = one of FRO|SG|RP|VW2`.  
+    Default sort: `display_name`.
+    
+- **Pokédex (detail)**: `public.v_pokedex_detail_app`  
+    Purpose: single-row detail including per-game stats, abilities, sprites, and a ready-to-render **learnset JSON** grouped by method.  
+    Filters: `game_id`, `forme_id`. No extra joins from the client.
+    
+- **Learnsets (flat, optional)**: `public.v_learnsets_public_ui`  
+    Purpose: normalized flat list if you also want a “Moves” list UI (move id, name, type, cat, power/acc/pp/priority).  
+    Sort guidance: by method (LEVEL→level, TM/HM→tm_no, else name).
+    
+- **Encounters (ordered)**: `public.v_route_encounters_full`  
+    Purpose: fully enriched/ordered encounters per route (labels/types/sprites already resolved).  
+    Filters: `game_id` (global), `route_id` (selected).  
+    Sort: `sort_index` → method priority → `slot_no`.
+    
+- **Trainers (pre-aggregated)**: `public.v_app_trainers_full`  
+    Purpose: trainer listing (split ordering, location, badges) + **ordered `team` JSON** (forme, level, shiny, types, sprites, and move names/types).
+    
+
+> All reads MUST come from these surfaces. No direct base-table queries from the UI.
+
+---
+
+## **Pages & Flows (high-level, tech-agnostic)**
+
+- **Home**
+    
+    - Present 4 prominent game tiles (FRO, SG, RP, VW2) + short descriptors.
+        
+    - Cards link to **Pokédex**, **Encounters**, **Trainers** for that game.
+        
+- **Pokédex (List)**
+    
+    - Data: `v_pokedex_app` (filtered by `game_id`).
+        
+    - UI: search by name (case-insensitive), type filters (either/or on type1/type2), grid of cards (sprite, name, type chips).
+        
+    - Click → **Pokédex Detail** route with deep link.
+        
+- **Pokédex (Detail)**
+    
+    - Data: `v_pokedex_detail_app` (filtered by `game_id`, `forme_id`).
+        
+    - Tabs: **Overview** (types, abilities, base stats), **Learnset** (render from built-in JSON; group by method; no extra joins).
+        
+- **Encounters**
+    
+    - Left rail: routes for selected game (use route name + `sort_index`).
+        
+    - Main: `v_route_encounters_full` for chosen route; rows show `forme_label`, sprites, min/max level, rate, and type badges from the view’s `types[]`.
+        
+    - Method chips (e.g., Walking/Surfing/Fishing) toggle filter without re-joining other tables.
+        
+- **Trainers**
+    
+    - Data: `v_app_trainers_full` (filter: `game_id`; order by split group → split → trainer order).
+        
+    - List: trainer class/name, location, level cap badge, leader/champion tags.
+        
+    - Detail: render `team` JSON in order (per-slot types, moves, sprites), with simple toggles for shiny indicator if present.
+        
+- **Navigation & Layout (must-haves)**
+    
+    - Persistent **top navbar** (Home, Pokédex, Encounters, Trainers) + visible **Game Switcher** (radio group or segmented control).
+        
+    - **Breadcrumbs** on secondary pages, **Back to Top** floating button, and a visible **“Skip to main content”** link for accessibility (placed first in the `<body>`).
+    - **404 / error** pages with retry actions.
+        
+
+---
+
+## **Dark-Mode & Responsive UX Requirements**
+
+- Treat dark mode as first-class: use dark greys (not pure black) to preserve depth and reduce eye strain; **desaturate accents** and ensure elevation is legible. 
+- Meet **WCAG 2.x color contrast**: body text ≥ **4.5:1**, large text ≥ **3:1**. Validate examples used for badges, chips, and disabled states. 
+    
+- Prefer legible typography with comfortable line-height; maintain visible focus states in dark mode.
+    
+- Mobile-first, fluid grids; collapse sidebar/filters on small screens; ensure images/sprites scale gracefully.
+    
+- Keep link purpose clear in context and avoid ambiguous “click here” phrasing. 
+    
+
+> You may reference Material dark-theme heuristics for tone/elevation, but do not hard-lock to a specific design kit. 
+
+---
+
+## **Data Layer Rules (enforced)**
+
+- Initialize a **browser Supabase client** with `VITE_SUPABASE_URL` + **anon key**. Use **public views only**. 
+    
+- Respect RLS: no bypasses, no service keys in client code. 
+    
+- **Required filters and sort** per view (examples):
+    
+    - Pokédex list: `eq('game_id', <GAME>)` + order by `display_name`.
+        
+    - Pokédex detail: `eq('game_id', <GAME>).eq('forme_id', <FORME>).single()`.
+        
+    - Encounters: `eq('game_id', <GAME>).eq('route_id', <ROUTE>)` + order by `sort_index` then `slot_no`.
+        
+    - Trainers: `eq('game_id', <GAME>)` + order by split group/sort/trainer order.
+        
+- **Never re-join base tables** in the UI. All labels/types/sprites and team/move details are **already in the views**.
+    
+
+---
+
+## **Reliability: Preflight + Error Handling**
+
+On app startup, run a **preflight** check:
+
+- Quick count on `v_pokedex_app` for current game (≥1).
+    
+- Fetch one row from `v_route_encounters_full` for any route in that game.
+    
+- Fetch one row from `v_app_trainers_full` for that game.
+    
+
+If any fail, show a full-page error with the failing query, the Supabase error message, and a **Try Again** button. (This ensures environment + RLS + views are wired.)
+
+---
+
+## **Quality Bar & Acceptance Criteria**
+
+**The app is complete only if ALL criteria pass:**
+
+1. **Data contract compliance**
+    
+    - Every read comes **only** from: `v_pokedex_app`, `v_pokedex_detail_app`, `v_learnsets_public_ui` (if used), `v_route_encounters_full`, `v_app_trainers_full`.
+        
+    - No base-table reads in client code. RLS not bypassed.
+        
+2. **Core tools**
+    
+    - **Pokédex (list)**: filter by game; search & type filters; deterministic order; cards show sprite + types.
+        
+    - **Pokédex (detail)**: overview + learnset tabs; learnset renders from provided JSON (no extra joins).
+        
+    - **Encounters**: left rail of routes; method chips; rows show forme label, level range, rate, and type badges from the **view’s** `types[]`.
+        
+    - **Trainers**: list respects split ordering; detail renders `team` JSON with move names/types and types badges—order preserved.
+        
+3. **UX & Accessibility**
+    
+    - Dark-mode meets WCAG contrast; focus rings visible; “Skip to main content” present; “Back to top” control available.
+        
+    - Responsive across small/medium/large breakpoints; touch targets and tap areas are accessible.
+        
+4. **Navigation**
+    
+    - Persistent top nav to **Home / Pokédex / Encounters / Trainers** + **Game Switcher**.
+        
+    - Page-level breadcrumbs and deep links (URLs encode `game_id`, and where relevant, `forme_id` or `route_id` or `trainer_id`).
+        
+    - Obvious **Home** return from any page.
+        
+5. **Resilience**
+    
+    - Global loading states/skeletons; explicit error surfaces with retry.
+        
+    - Preflight must run and block rendering when environment/keys/views are misconfigured.
+        
+6. **Deployment-ready**
+    
+    - Secrets configured via Replit Secrets. [
+        
+    - Provide minimal deployment notes: if frontend-only, **Static Deployment** is fine; otherwise use standard Replit Deployments and document how to run. [
+        
+    - If privacy is needed during testing, note **Private Deployments** (Teams). 
+        
+
+---
+
+## **Implementation Hints (optional, non-binding)**
+
+- Use any modern web framework you prefer. Keep components small and composable.
+    
+- Centralize the “current game” in app state; ensure the **game switcher** updates routes and queries consistently.
+    
+- For Supabase, follow the official “initialize client” pattern and keep the key outside source control. [
+    
+- For dark mode, lean on proven heuristics (dark greys vs. black, desaturated accents, clear elevation). Validate contrast as you theme. 
+    
+
+---
+
+## **Deliverables**
+
+- A runnable Replit app with working pages, navigation, and the three tools.
+    
+- A short **README** explaining:
+    
+    - How to set **Replit Secrets**. 
+        
+    - How to start the dev server and how to deploy (Static vs. standard Deployments). 
+        
+    - Which **DB contract views** are consumed and how preflight validates them.
+        
+
+**Build it so it “just works,” is easy to navigate, accessible, and strictly adheres to the DB contract.**

@@ -1,0 +1,423 @@
+/*
+  Global stylesheet establishing theme tokens, elevation surfaces, and dual-mode
+  color-scheme. `:root { color-scheme: light dark; }` enables native form and
+  scrollbar theming for both schemes, while `.dark { color-scheme: dark; }`
+  locks UA widgets to dark mode when the dark class is active. The ThemeToggle
+  synchronizes `html.style.colorScheme` so built-in UI elements instantly match
+  the selected theme. Surface tokens (`--surface-0/1/2`) map background, cards,
+  and sticky headers to stepped grays for clear elevation.
+*/
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+@import './styles/bootstrap-theme.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Light mode surface tokens */
+  --surface-0: 70.91 21.57% 90%;
+  --surface-1: 180 6.6667% 97.0588%;
+  --surface-2: 180 6.6667% 98%;
+
+  /* Map core elements to surface tokens */
+  --background: hsl(var(--surface-0));
+  --foreground: hsl(0, 0%, 8.24%);
+  --card: hsl(var(--surface-1));
+  /* Elevated surfaces for light mode */
+  --card-elev-1: hsl(var(--surface-2));
+  --card-elev-2: hsl(180 6.6667% 99%);
+  --card-foreground: hsl(210 25% 7.8431%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(210 25% 7.8431%);
+  --primary: hsl(165.65, 26.44%, 65.88%);
+  --primary-foreground: hsl(0, 0%, 8.24%);
+  --secondary: hsl(0, 0%, 8.24%);
+  --secondary-foreground: hsl(70.91, 21.57%, 90%);
+  --muted: hsl(72, 12.82%, 84.71%);
+  --muted-foreground: hsl(72, 2.39%, 40.98%);
+  --accent: hsl(292.13, 48.03%, 75.1%);
+  --accent-foreground: hsl(0, 0%, 8.24%);
+  --destructive: hsl(0.49, 54.19%, 55.49%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --border: hsl(35, 10.53%, 77.65%);
+  --input: hsl(35.29, 11.41%, 70.78%);
+  --ring: hsl(166.76, 29.82%, 44.71%);
+  --chart-1: hsl(203.8863 88.2845% 53.1373%);
+  --chart-2: hsl(159.7826 100% 36.0784%);
+  --chart-3: hsl(42.0290 92.8251% 56.2745%);
+  --chart-4: hsl(147.1429 78.5047% 41.9608%);
+  --chart-5: hsl(341.4894 75.2000% 50.9804%);
+  --sidebar: hsl(180 6.6667% 97.0588%);
+  --sidebar-foreground: hsl(210 25% 7.8431%);
+  --sidebar-primary: hsl(203.8863 88.2845% 53.1373%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(211.5789 51.3514% 92.7451%);
+  --sidebar-accent-foreground: hsl(203.8863 88.2845% 53.1373%);
+  --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
+  --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
+  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Source Serif Pro', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --radius: 0.875rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00);
+  --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+  --shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.1), 0 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+  --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
+  --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.1), 0 10px 10px -5px hsl(0 0% 0% / 0.04);
+  --shadow-2xl: 0 25px 50px -12px hsl(0 0% 0% / 0.25);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  /* Softened dark theme built on near-black for comfortable contrast */
+  --surface-0: 0 0% 7%;
+  --surface-1: 0 0% 10%;
+  --surface-2: 0 0% 13%;
+
+  --background: hsl(var(--surface-0));
+  --foreground: hsl(200 6.6667% 91.1765%);
+  --card: hsl(var(--surface-1));
+  --card-elev-1: hsl(0 0% 16%);
+  --card-elev-2: hsl(0 0% 20%);
+  --card-foreground: hsl(0 0% 85.0980%);
+  --popover: hsl(0 0% 16%);
+  --popover-foreground: hsl(200 6.6667% 91.1765%);
+  /* Desaturated accent and primary hues reduce glare in dark mode */
+  --primary: hsl(203.7736 45% 41%);
+  --primary-foreground: hsl(0 0% 95%);
+  --secondary: hsl(195.0000 12% 94.9020%);
+  --secondary-foreground: hsl(210 25% 7.8431%);
+  --muted: hsl(0 0% 9.4118%);
+  --muted-foreground: hsl(210 3.3898% 46.2745%);
+  --accent: hsl(205.7143 35% 7.8431%);
+  --accent-foreground: hsl(203.7736 70% 52.5490%);
+  --destructive: hsl(356.3033 58% 54.3137%);
+  --destructive-foreground: hsl(0 0% 95%);
+  --border: hsl(0 0% 20%);
+  --input: hsl(207.6923 27.6596% 18.4314%);
+  --ring: hsl(203.8863 55% 53.1373%);
+  --chart-1: hsl(203.8863 88.2845% 53.1373%);
+  --chart-2: hsl(159.7826 100% 36.0784%);
+  --chart-3: hsl(42.0290 92.8251% 56.2745%);
+  --chart-4: hsl(147.1429 78.5047% 41.9608%);
+  --chart-5: hsl(341.4894 75.2000% 50.9804%);
+  --sidebar: hsl(0 0% 18%);
+  --sidebar-foreground: hsl(0 0% 85.0980%);
+  --sidebar-primary: hsl(203.7736 45% 41%);
+  --sidebar-primary-foreground: hsl(0 0% 95%);
+  --sidebar-accent: hsl(205.7143 35% 7.8431%);
+  --sidebar-accent-foreground: hsl(203.7736 70% 52.5490%);
+  --sidebar-border: hsl(0 0% 20%);
+  --sidebar-ring: hsl(203.8863 55% 53.1373%);
+  --font-sans: Open Sans, sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 1.3rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(203.8863 55% 53.1373% / 0.00);
+  --shadow-xs: 0px 2px 0px 0px hsl(203.8863 55% 53.1373% / 0.00);
+  --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+  --shadow: 0 1px 3px 0 hsl(0 0% 0% / 0.4), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
+  --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4), 0 2px 4px -2px hsl(0 0% 0% / 0.3);
+  --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.4), 0 4px 6px -4px hsl(0 0% 0% / 0.3);
+  --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.5), 0 10px 10px -5px hsl(0 0% 0% / 0.4);
+  --shadow-2xl: 0 25px 50px -12px hsl(0 0% 0% / 0.5);
+  --spacing: 0.25rem;
+  --tracking-normal: 0em;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    /* Enhanced line height for better readability */
+    line-height: 1.6;
+  }
+
+  /* System preference detection with fallback */
+  @media (prefers-color-scheme: dark) {
+    html:not([data-bs-theme]) {
+      @apply dark;
+    }
+    html:not([data-bs-theme]) {
+      --bs-theme: dark;
+    }
+  }
+}
+
+/* Custom animations for better UX */
+@keyframes fadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(10px); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes shimmer {
+  0% { 
+    background-position: -200px 0; 
+  }
+  100% { 
+    background-position: calc(200px + 100%) 0; 
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Accessibility improvements */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* High contrast focus states for accessibility */
+*:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem hsl(var(--ring) / 0.25);
+}
+
+/* Ensure good contrast in dark mode */
+.dark .bg-muted {
+  background-color: hsl(var(--muted));
+}
+
+.dark .text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+}
+
+/* Fluid typography scales headings for small to large screens */
+h1,
+.h1 {
+  font-size: clamp(1.75rem, 4vw + 1rem, 3rem);
+}
+h2,
+.h2 {
+  font-size: clamp(1.5rem, 3vw + 0.75rem, 2.25rem);
+}
+h3,
+.h3 {
+  font-size: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+}
+
+/* Smooth transitions */
+* {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+/* ---- Dark-mode polish (responsive & accessible) ---- */
+/* Bootstrap Integration Utilities */
+.container-fluid {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Enhanced card hover states */
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+[data-bs-theme="dark"] .card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Loading skeleton improvements */
+.shimmer {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(var(--bs-primary-rgb), 0.1), 
+    transparent
+  );
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+[data-bs-theme="dark"] .shimmer {
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.05), 
+    transparent
+  );
+}
+
+/* Elevation: darker base, lighter surfaces as they elevate. */
+:root {
+  color-scheme: light dark;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+/* Base background slightly above pure black for comfort */
+body {
+  background: radial-gradient(1200px 600px at 20% -10%, rgba(255,255,255,0.04), transparent 60%),
+              radial-gradient(800px 400px at 120% -10%, rgba(255,255,255,0.03), transparent 60%),
+              var(--background);
+}
+
+/* Make cards feel elevated (lighten on dark) */
+.bg-card\/60, .bg-card\/70, .bg-muted, .bg-muted\/30, .bg-muted\/40, .bg-muted\/50, .bg-muted\/80 {
+  backdrop-filter: saturate(140%) blur(2px);
+}
+
+/* Typography for readability */
+html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* Responsive breakpoint utilities */
+@media (max-width: 575.98px) {
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .container-fluid {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* Ensure tap targets are at least 44x44px */
+.btn, button, [role="button"] {
+  min-height: 44px;
+}
+
+.btn-sm {
+  min-height: 38px;
+}
+
+/* Improved table responsiveness */
+.table-responsive {
+  border-radius: 0.375rem;
+  border: 1px solid var(--bs-border-color);
+}
+
+@media (max-width: 767.98px) {
+  .table-responsive table {
+    font-size: 0.875rem;
+  }
+}
+
+/* Sprite container improvements */
+.sprite-container {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sprite-container img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Enhanced badge contrast for dark mode */
+.dark .badge {
+  border-width: 1px;
+  color: hsl(0 0% 92%);
+}
+
+/* Elevated surface application */
+.dark .card {
+  background-color: var(--card);
+}
+
+.dark .modal-content {
+  background-color: var(--card-elev-1);
+}
+
+/* Move category badges with better contrast */
+.move-category-physical {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: rgb(185, 28, 28);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.dark .move-category-physical {
+  background-color: rgba(243, 174, 174, 0.15);
+  color: hsl(0 0% 95%);
+  border-color: rgba(243, 174, 174, 0.25);
+}
+
+.move-category-special {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: rgb(29, 78, 216);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.dark .move-category-special {
+  background-color: rgba(158, 198, 242, 0.15);
+  color: hsl(0 0% 95%);
+  border-color: rgba(158, 198, 242, 0.25);
+}
+
+.move-category-status {
+  background-color: rgba(107, 114, 128, 0.15);
+  color: rgb(75, 85, 99);
+  border: 1px solid rgba(107, 114, 128, 0.25);
+}
+
+.dark .move-category-status {
+  background-color: rgba(158, 164, 173, 0.15);
+  color: hsl(0 0% 95%);
+  border-color: rgba(158, 164, 173, 0.25);
+}
+
+/* Sticky headers and first column for encounter tables */
+thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: hsl(var(--surface-2));
+  border-bottom: 1px solid var(--border);
+}
+.encounter-table td:first-child,
+.encounter-table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: hsl(var(--surface-2));
+}

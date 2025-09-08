@@ -1,0 +1,211 @@
+/**
+ * Bootstrap Theme Customization with surface tokens.
+ * Establishes shared color variables and elevation surfaces for light
+ * and dark modes to keep Bootstrap components in sync with Tailwind themes.
+ */
+:root {
+  /* Light mode surface tokens */
+  --surface-0: 70.91 21.57% 90%;
+  --surface-1: 180 6.6667% 97.0588%;
+  --surface-2: 180 6.6667% 98%;
+
+  /* Bootstrap Color Variables - Light Mode */
+  --bs-primary: hsl(165.65, 26.44%, 65.88%);
+  --bs-primary-rgb: 134, 186, 176;
+  --bs-secondary: hsl(0, 0%, 8.24%);
+  --bs-secondary-rgb: 21, 21, 21;
+  --bs-success: hsl(147.1429, 78.5047%, 41.9608%);
+  --bs-success-rgb: 22, 163, 74;
+  --bs-info: hsl(203.8863, 88.2845%, 53.1373%);
+  --bs-info-rgb: 59, 130, 246;
+  --bs-warning: hsl(42.0290, 92.8251%, 56.2745%);
+  --bs-warning-rgb: 245, 158, 11;
+  --bs-danger: hsl(0.49, 54.19%, 55.49%);
+  --bs-danger-rgb: 239, 68, 68;
+  --bs-light: hsl(72, 12.82%, 84.71%);
+  --bs-light-rgb: 243, 244, 246;
+  --bs-dark: hsl(0, 0%, 8.24%);
+  --bs-dark-rgb: 21, 21, 21;
+
+  /* Background and text */
+  --bs-body-bg: hsl(var(--surface-0));
+  --bs-body-bg-rgb: 240, 242, 235;
+  --bs-body-color: hsl(0, 0%, 8.24%);
+  --bs-body-color-rgb: 21, 21, 21;
+  --bs-card-bg: hsl(var(--surface-1));
+
+  /* Border and form controls */
+  --bs-border-color: hsl(35, 10.53%, 77.65%);
+  --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
+
+  /* Enable color scheme for native form controls */
+  color-scheme: light dark;
+}
+
+[data-bs-theme="dark"] {
+  /* Bootstrap Color Variables - Dark Mode with desaturated accents */
+  --surface-0: 0 0% 7%;
+  --surface-1: 0 0% 10%;
+  --surface-2: 0 0% 13%;
+
+  --bs-primary: hsl(203.7736, 45%, 41%);
+  --bs-primary-rgb: 58, 114, 152;
+  --bs-secondary: hsl(195.0000, 12.3077%, 94.9020%);
+  --bs-secondary-rgb: 240, 243, 244;
+  --bs-success: hsl(147.1429, 50%, 41.9608%);
+  --bs-success-rgb: 54, 161, 102;
+  --bs-info: hsl(203.8863, 55%, 53.1373%);
+  --bs-info-rgb: 70, 149, 201;
+  --bs-warning: hsl(42.0290, 60%, 56.2745%);
+  --bs-warning-rgb: 210, 170, 77;
+  --bs-danger: hsl(356.3033, 58%, 54.3137%);
+  --bs-danger-rgb: 206, 71, 79;
+  --bs-light: hsl(0, 0%, 9.4118%);
+  --bs-light-rgb: 24, 24, 27;
+  --bs-dark: hsl(200, 6.6667%, 91.1765%);
+  --bs-dark-rgb: 228, 232, 237;
+
+  /* Background and text - dark gray base avoids pure black */
+  --bs-body-bg: hsl(var(--surface-0));
+  --bs-body-bg-rgb: 26, 26, 26;
+  --bs-body-color: hsl(200, 6.6667%, 91.1765%);
+  --bs-body-color-rgb: 228, 232, 237;
+  --bs-badge-color: hsl(0, 0%, 92%);
+
+  /* Border and form controls */
+  --bs-border-color: hsl(0, 0%, 18%);
+  --bs-border-color-translucent: rgba(255, 255, 255, 0.15);
+
+  /* Card and surface colors for elevation */
+  --bs-card-bg: hsl(var(--surface-1));
+  --bs-card-border-color: var(--bs-border-color);
+  --bs-modal-bg: hsl(var(--surface-2));
+}
+
+/* Focus styles that work in both light and dark modes */
+:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Ensure focus is never obscured by sticky elements */
+.sticky-top:focus-within,
+.fixed-top:focus-within {
+  z-index: 1050;
+}
+
+/* Enhanced button focus states */
+.btn:focus-visible {
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.5);
+}
+
+/* Form control focus improvements */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+/* Dark mode specific improvements */
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+  background-color: hsl(0, 0%, 16%);
+  border-color: var(--bs-border-color);
+  color: var(--bs-body-color);
+}
+
+[data-bs-theme="dark"] .form-control:focus,
+[data-bs-theme="dark"] .form-select:focus {
+  background-color: hsl(0, 0%, 16%);
+  border-color: var(--bs-primary);
+}
+
+/* Card elevation in dark mode */
+
+[data-bs-theme="dark"] .card {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-card-border-color);
+}
+
+/* Modal and dropdown improvements for dark mode */
+[data-bs-theme="dark"] .modal-content {
+  background-color: var(--bs-modal-bg);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .dropdown-menu {
+  background-color: var(--bs-card-bg);
+  border-color: var(--bs-border-color);
+}
+
+[data-bs-theme="dark"] .dropdown-item:hover,
+[data-bs-theme="dark"] .dropdown-item:focus {
+  background-color: hsl(205.7143, 44.8%, 7.8431%);
+  color: var(--bs-body-color);
+}
+
+/* Typography improvements for dark mode */
+[data-bs-theme="dark"] {
+  line-height: 1.6; /* Slightly increased for better readability */
+}
+
+/* Ensure adequate contrast for muted text in dark mode */
+[data-bs-theme="dark"] .text-muted {
+  color: hsl(210, 3.3898%, 56.2745%);
+}
+
+/* Toast and alert improvements */
+[data-bs-theme="dark"] .toast {
+  background-color: hsl(0, 0%, 16%);
+  border-color: hsl(0, 0%, 18%);
+}
+
+[data-bs-theme="dark"] .alert {
+  border-width: 1px;
+}
+
+/* Navbar improvements for dark mode */
+[data-bs-theme="dark"] .navbar {
+  background-color: hsl(0, 0%, 16%);
+  border-bottom: 1px solid hsl(0, 0%, 18%);
+}
+
+/* Table improvements for dark mode */
+[data-bs-theme="dark"] .table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: hsl(0, 0%, 18%);
+  --bs-table-hover-bg: hsl(0, 0%, 20%);
+  --bs-table-border-color: hsl(0, 0%, 18%);
+}
+
+/*
+ * Navbar utilities
+ * - `.dg-section-label` centers the active section text horizontally
+ *   and keeps it readable within constrained space.
+ * - `.dg-game-pill` displays the active game with theme-aware colors
+ *   and automatic contrast handling.
+ */
+.dg-section-label {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 60%;
+  color: var(--dg-navbar-fg);
+}
+
+.dg-game-pill {
+  margin-left: auto;
+  padding: 0.125rem 0.5rem;
+  border-radius: var(--bs-border-radius-pill);
+  background-color: color-mix(in srgb, var(--dg-navbar-bg), white 70%);
+  color: var(--dg-navbar-fg);
+  /* Pick darker text when navbar foreground is too light */
+  color: color-contrast(
+    color-mix(in srgb, var(--dg-navbar-bg), white 70%)
+    vs var(--dg-navbar-fg), #111
+  );
+}

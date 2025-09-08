@@ -1,0 +1,310 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { TypeBadge } from './TypeBadge';
+import { LoadingSkeleton } from '@/components/ui/loading-skeleton';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { PokedexDetail, GameId } from '@/types/database';
+
+interface PokemonDetailProps {
+  formeId: string;
+  gameId: GameId;
+}
+
+export function PokemonDetail({ formeId, gameId }: PokemonDetailProps) {
+  const { data: pokemon, isLoading, error, refetch } = useQuery<PokedexDetail>({
+    queryKey: ['pokemon-detail', gameId, formeId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('v_pokedex_detail_app')
+        .select('*')
+        .eq('game_id', gameId)
+        .eq('forme_id', formeId)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  if (isLoading) {
+    return <PokemonDetailSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <ErrorBoundary
+        error={error}
+        onRetry={() => refetch()}
+        title="Failed to load Pokémon details"
+      />
+    );
+  }
+
+  if (!pokemon) {
+    return (
+      <ErrorBoundary
+        error="Pokémon not found"
+        title="Not Found"
+      />
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Overview Card */}
+      <div className="lg:col-span-1">
+        <Card>
+          <CardContent className="p-6 space-y-6">
+            {/* Pokemon Image and Basic Info */}
+            <div className="text-center">
+              <div className="w-32 h-32 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                {pokemon.sprite_url ? (
+                  <img
+                    src={pokemon.sprite_url}
+                    alt={pokemon.display_name}
+                    className="w-28 h-28 object-contain"
+                  />
+                ) : (
+                  <span className="text-4xl">🐾</span>
+                )}
+              </div>
+              <h1 className="text-2xl font-bold text-foreground" data-testid="pokemon-name">
+                {pokemon.display_name}
+              </h1>
+              <p className="text-muted-foreground">
+                #{pokemon.dex_number.toString().padStart(3, '0')}
+              </p>
+
+              {/* Type badges */}
+              <div className="flex justify-center space-x-2 mt-3">
+                <TypeBadge type={pokemon.type1} />
+                {pokemon.type2 && <TypeBadge type={pokemon.type2} />}
+              </div>
+            </div>
+
+            {/* Abilities */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-3">Abilities</h3>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                  <span className="font-medium">{pokemon.ability1}</span>
+                  <span className="text-sm text-muted-foreground">Normal</span>
+                </div>
+                {pokemon.ability2 && (
+                  <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                    <span className="font-medium">{pokemon.ability2}</span>
+                    <span className="text-sm text-muted-foreground">Normal</span>
+                  </div>
+                )}
+                {pokemon.hidden_ability && (
+                  <div className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                    <span className="font-medium">{pokemon.hidden_ability}</span>
+                    <span className="text-sm text-muted-foreground">Hidden</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Base Stats */}
+            <div>
+              <h3 className="text-lg font-semibold text-foreground mb-3">Base Stats</h3>
+              <BaseStatsDisplay pokemon={pokemon} />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Details and Learnset */}
+      <div className="lg:col-span-2">
+        <Card>
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-muted">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="learnset">Learnset</TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="overview" className="p-6">
+              <OverviewTab pokemon={pokemon} />
+            </TabsContent>
+
+            <TabsContent value="learnset" className="p-6">
+              <LearnsetTab learnset={pokemon.learnset} />
+            </TabsContent>
+          </Tabs>
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function BaseStatsDisplay({ pokemon }: { pokemon: PokedexDetail }) {
+  const stats = [
+    { name: 'HP', value: pokemon.base_hp, color: 'bg-green-500' },
+    { name: 'Attack', value: pokemon.base_attack, color: 'bg-red-500' },
+    { name: 'Defense', value: pokemon.base_defense, color: 'bg-yellow-500' },
+    { name: 'Sp. Atk', value: pokemon.base_sp_attack, color: 'bg-blue-500' },
+    { name: 'Sp. Def', value: pokemon.base_sp_defense, color: 'bg-purple-500' },
+    { name: 'Speed', value: pokemon.base_speed, color: 'bg-pink-500' },
+  ];
+
+  return (
+    <div className="space-y-3">
+      {stats.map((stat) => (
+        <div key={stat.name} className="flex items-center">
+          <span className="w-16 text-sm text-muted-foreground">{stat.name}</span>
+          <span className="w-8 text-sm font-mono text-right mr-3">{stat.value}</span>
+          <div className="flex-1 bg-muted rounded-full h-2">
+            <div
+              className={`${stat.color} h-2 rounded-full transition-all duration-500`}
+              style={{ width: `${Math.min((stat.value / 150) * 100, 100)}%` }}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function OverviewTab({ pokemon }: { pokemon: PokedexDetail }) {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Physical Characteristics */}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Physical Characteristics</h3>
+        <div className="space-y-3">
+          {pokemon.height && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Height</span>
+              <span className="font-medium">{pokemon.height} m</span>
+            </div>
+          )}
+          {pokemon.weight && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Weight</span>
+              <span className="font-medium">{pokemon.weight} kg</span>
+            </div>
+          )}
+          {pokemon.category && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Category</span>
+              <span className="font-medium">{pokemon.category}</span>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Battle Mechanics */}
+      <div>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Battle Mechanics</h3>
+        <div className="space-y-3">
+          {pokemon.catch_rate && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Catch Rate</span>
+              <span className="font-medium">{pokemon.catch_rate}</span>
+            </div>
+          )}
+          {pokemon.base_experience && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Base Experience</span>
+              <span className="font-medium">{pokemon.base_experience}</span>
+            </div>
+          )}
+          {pokemon.growth_rate && (
+            <div className="flex justify-between items-center">
+              <span className="text-muted-foreground">Growth Rate</span>
+              <span className="font-medium">{pokemon.growth_rate}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LearnsetTab({ learnset }: { learnset: any }) {
+  if (!learnset) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-muted-foreground">No learnset data available</p>
+      </div>
+    );
+  }
+
+  // Parse learnset JSON and group by method
+  const moves = Array.isArray(learnset) ? learnset : [];
+  const groupedMoves = moves.reduce((acc: any, move: any) => {
+    const method = move.method || 'Unknown';
+    if (!acc[method]) acc[method] = [];
+    acc[method].push(move);
+    return acc;
+  }, {});
+
+  return (
+    <div className="space-y-6">
+      {Object.entries(groupedMoves).map(([method, methodMoves]: [string, any]) => (
+        <div key={method}>
+          <h4 className="text-md font-semibold text-foreground mb-3 capitalize">
+            {method} Moves
+          </h4>
+          <div className="grid gap-2">
+            {methodMoves.map((move: any, index: number) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                <div className="flex items-center space-x-3">
+                  <span className="font-medium">{move.move_name || move.name}</span>
+                  {move.type && <TypeBadge type={move.type} className="text-xs" />}
+                </div>
+                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                  {move.level && <span>Lv.{move.level}</span>}
+                  {move.power && <span>{move.power} PWR</span>}
+                  {move.accuracy && <span>{move.accuracy}% ACC</span>}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function PokemonDetailSkeleton() {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="lg:col-span-1">
+        <Card>
+          <CardContent className="p-6 space-y-6">
+            <div className="text-center">
+              <LoadingSkeleton className="w-32 h-32 mx-auto mb-4 rounded-lg" />
+              <LoadingSkeleton className="h-6 w-32 mx-auto mb-2" />
+              <LoadingSkeleton className="h-4 w-16 mx-auto mb-3" />
+              <div className="flex justify-center space-x-2">
+                <LoadingSkeleton className="h-6 w-16 rounded-full" />
+                <LoadingSkeleton className="h-6 w-16 rounded-full" />
+              </div>
+            </div>
+            <div>
+              <LoadingSkeleton className="h-5 w-20 mb-3" />
+              <LoadingSkeleton count={3} className="h-12 mb-2" />
+            </div>
+            <div>
+              <LoadingSkeleton className="h-5 w-24 mb-3" />
+              <LoadingSkeleton count={6} className="h-6 mb-2" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <div className="lg:col-span-2">
+        <Card>
+          <CardContent className="p-6">
+            <LoadingSkeleton className="h-10 w-full mb-6" />
+            <LoadingSkeleton count={8} className="h-16 mb-4" />
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+}

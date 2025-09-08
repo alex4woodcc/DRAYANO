@@ -1,0 +1,49 @@
+import { Link } from 'wouter';
+import { Card, CardContent } from '@/components/ui/card';
+import { TypeBadge } from './TypeBadge';
+import { PokedexEntry } from '@/types/database';
+import { useGame } from '@/hooks/use-game';
+
+interface PokemonCardProps {
+  pokemon: PokedexEntry;
+}
+
+export function PokemonCard({ pokemon }: PokemonCardProps) {
+  const { currentGame } = useGame();
+
+  return (
+    <Link href={`/pokemon/${pokemon.forme_id}?game=${currentGame}`}>
+      <Card className="hover:shadow-md transition-all cursor-pointer group" data-testid={`pokemon-card-${pokemon.forme_id}`}>
+        <CardContent className="p-4 text-center">
+          {/* Pokemon Sprite */}
+          <div className="w-24 h-24 mx-auto mb-3 bg-muted rounded-lg flex items-center justify-center group-hover:bg-muted/80 transition-colors">
+            {pokemon.sprite_url ? (
+              <img
+                src={pokemon.sprite_url}
+                alt={pokemon.display_name}
+                className="w-20 h-20 object-contain"
+                loading="lazy"
+              />
+            ) : (
+              <span className="text-2xl">🐾</span>
+            )}
+          </div>
+
+          {/* Pokemon Name and Number */}
+          <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
+            {pokemon.display_name}
+          </h3>
+          <p className="text-sm text-muted-foreground mb-3">
+            #{pokemon.dex_number.toString().padStart(3, '0')}
+          </p>
+
+          {/* Type Badges */}
+          <div className="flex justify-center space-x-1">
+            <TypeBadge type={pokemon.type1} />
+            {pokemon.type2 && <TypeBadge type={pokemon.type2} />}
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+}

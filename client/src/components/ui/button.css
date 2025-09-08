@@ -1,0 +1,17 @@
+/*
+ * Supplemental styles for the shared Button component.
+ * Provides accessible focus outlines and 44px sizing for `icon` buttons.
+ */
+.btn:focus-visible {
+  outline: 2px solid var(--bs-primary);
+  outline-offset: 2px;
+}
+
+.btn-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

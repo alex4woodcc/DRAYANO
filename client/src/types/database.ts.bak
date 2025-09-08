@@ -1,0 +1,79 @@
+export type GameId = 'FRO' | 'SG' | 'RP' | 'VW2';
+
+export interface PokedexEntry {
+  forme_id: string;
+  display_name: string;
+  game_id: GameId;
+  type1: string;
+  type2?: string;
+  sprite_url?: string;
+  dex_number: number;
+}
+
+export interface PokedexDetail {
+  forme_id: string;
+  display_name: string;
+  game_id: GameId;
+  type1: string;
+  type2?: string;
+  sprite_url?: string;
+  dex_number: number;
+  base_hp: number;
+  base_attack: number;
+  base_defense: number;
+  base_sp_attack: number;
+  base_sp_defense: number;
+  base_speed: number;
+  ability1: string;
+  ability2?: string;
+  hidden_ability?: string;
+  learnset: any; // JSON field with move data
+  height?: number;
+  weight?: number;
+  category?: string;
+  catch_rate?: number;
+  base_experience?: number;
+  growth_rate?: string;
+}
+
+export interface RouteEncounter {
+  route_id: string;
+  route_name: string;
+  forme_id: string;
+  forme_label: string;
+  game_id: GameId;
+  method: string;
+  min_level: number;
+  max_level: number;
+  encounter_rate: number;
+  slot_no: number;
+  sort_index: number;
+  types: string[];
+  sprite_url?: string;
+}
+
+export interface Trainer {
+  trainer_id: string;
+  trainer_class: string;
+  trainer_name: string;
+  game_id: GameId;
+  location: string;
+  split_group?: string;
+  split_order?: number;
+  trainer_order?: number;
+  level_cap?: number;
+  is_leader: boolean;
+  is_champion: boolean;
+  team: any; // JSON field with team data
+}
+
+export interface Move {
+  move_id: string;
+  move_name: string;
+  type: string;
+  category: string;
+  power?: number;
+  accuracy?: number;
+  pp?: number;
+  priority?: number;
+}

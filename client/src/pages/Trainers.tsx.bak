@@ -1,0 +1,173 @@
+import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { TrainerCard } from '@/components/trainers/TrainerCard';
+import { TrainerCardSkeleton } from '@/components/ui/loading-skeleton';
+import { ErrorBoundary } from '@/components/ui/error-boundary';
+import { Breadcrumbs } from '@/components/layout/Breadcrumbs';
+import { useGame } from '@/hooks/use-game';
+import { Trainer } from '@/types/database';
+import { Search, X } from 'lucide-react';
+
+export default function Trainers() {
+  const { currentGame } = useGame();
+  const [search, setSearch] = useState('');
+  const [trainerTypeFilter, setTrainerTypeFilter] = useState<string>('');
+
+  const { data: trainers, isLoading, error, refetch } = useQuery<Trainer[]>({
+    queryKey: ['trainers', currentGame, search, trainerTypeFilter],
+    queryFn: async () => {
+      let query = supabase
+        .from('v_app_trainers_full')
+        .select('*')
+        .eq('game_id', currentGame);
+
+      // Apply search filter
+      if (search.trim()) {
+        query = query.or(`trainer_name.ilike.%${search.trim()}%,trainer_class.ilike.%${search.trim()}%,location.ilike.%${search.trim()}%`);
+      }
+
+      // Apply trainer type filter
+      if (trainerTypeFilter === 'champion') {
+        query = query.eq('is_champion', true);
+      } else if (trainerTypeFilter === 'leader') {
+        query = query.eq('is_leader', true);
+      } else if (trainerTypeFilter === 'regular') {
+        query = query.eq('is_champion', false).eq('is_leader', false);
+      }
+
+      // Order by split group, then split order, then trainer order
+      query = query.order('split_group', { nullsFirst: false })
+                  .order('split_order', { nullsFirst: false })
+                  .order('trainer_order', { nullsFirst: false });
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    },
+  });
+
+  const clearFilters = () => {
+    setSearch('');
+    setTrainerTypeFilter('');
+  };
+
+  const hasActiveFilters = search.trim() || (trainerTypeFilter && trainerTypeFilter !== 'all');
+
+  if (error) {
+    return (
+      <>
+        <Breadcrumbs items={[{ label: 'Trainers' }]} />
+        <ErrorBoundary
+          error={error}
+          onRetry={() => refetch()}
+          title="Failed to load trainers"
+        />
+      </>
+    );
+  }
+
+  return (
+    <>
+      <Breadcrumbs items={[{ label: 'Trainers' }]} />
+      
+      <div className="space-y-8">
+        {/* Header */}
+        <div className="text-center space-y-2">
+          <h1 className="text-3xl font-bold text-foreground">Trainers</h1>
+          <p className="text-muted-foreground">
+            Browse trainer battles, teams, and difficulty levels
+          </p>
+        </div>
+
+        {/* Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="search"
+              placeholder="Search trainers..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10"
+              data-testid="trainer-search"
+            />
+          </div>
+
+          <Select value={trainerTypeFilter} onValueChange={setTrainerTypeFilter}>
+            <SelectTrigger className="w-full sm:w-48" data-testid="trainer-type-filter">
+              <SelectValue placeholder="Filter by type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Trainers</SelectItem>
+              <SelectItem value="champion">Champions</SelectItem>
+              <SelectItem value="leader">Gym Leaders</SelectItem>
+              <SelectItem value="regular">Regular Trainers</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {hasActiveFilters && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={clearFilters}
+              data-testid="clear-trainer-filters"
+            >
+              <X className="h-4 w-4 mr-2" />
+              Clear
+            </Button>
+          )}
+        </div>
+
+        {/* Results */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 12 }).map((_, i) => (
+              <TrainerCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : trainers?.length ? (
+          <>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                Showing {trainers.length} trainers
+                {hasActiveFilters && ' (filtered)'}
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trainers.map((trainer) => (
+                <TrainerCard 
+                  key={`${trainer.trainer_id}-${trainer.game_id}`} 
+                  trainer={trainer}
+                  onClick={() => {
+                    // TODO: Implement trainer detail modal or page
+                    console.log('View trainer details:', trainer.trainer_name);
+                  }}
+                />
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-12">
+            <div className="text-4xl mb-4">👥</div>
+            <h3 className="text-lg font-semibold text-foreground mb-2">No Trainers Found</h3>
+            <p className="text-muted-foreground mb-4">
+              {hasActiveFilters
+                ? 'Try adjusting your search or filters'
+                : 'No trainers available for this game'}
+            </p>
+            {hasActiveFilters && (
+              <Button onClick={clearFilters} data-testid="no-trainers-clear">
+                Clear Filters
+              </Button>
+            )}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
