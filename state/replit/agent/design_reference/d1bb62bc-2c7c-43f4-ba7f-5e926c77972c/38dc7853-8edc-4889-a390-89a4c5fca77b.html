@@ -1,0 +1,841 @@
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drayano Gauntlet Companion</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+       theme: {
+         extend: {
+          borderRadius: {
+          lg: "var(--radius)",
+          md: "calc(var(--radius) - 2px)",
+          sm: "calc(var(--radius) - 4px)",
+          },
+          colors: {
+          background: "var(--background)",
+          foreground: "var(--foreground)",
+          card: {
+             DEFAULT: "var(--card)",
+             foreground: "var(--card-foreground)",
+          },
+          popover: {
+             DEFAULT: "var(--popover)",
+             foreground: "var(--popover-foreground)",
+          },
+          primary: {
+             DEFAULT: "var(--primary)",
+             foreground: "var(--primary-foreground)",
+          },
+          secondary: {
+             DEFAULT: "var(--secondary)",
+             foreground: "var(--secondary-foreground)",
+          },
+          muted: {
+             DEFAULT: "var(--muted)",
+             foreground: "var(--muted-foreground)",
+          },
+          accent: {
+             DEFAULT: "var(--accent)",
+             foreground: "var(--accent-foreground)",
+          },
+          destructive: {
+             DEFAULT: "var(--destructive)",
+             foreground: "var(--destructive-foreground)",
+          },
+          border: "var(--border)",
+          input: "var(--input)",
+          ring: "var(--ring)",
+          chart: {
+             "1": "var(--chart-1)",
+             "2": "var(--chart-2)",
+             "3": "var(--chart-3)",
+             "4": "var(--chart-4)",
+             "5": "var(--chart-5)",
+          }
+          },
+          fontFamily: {
+          sans: ["var(--font-sans)"],
+          serif: ["var(--font-serif)"],
+          mono: ["var(--font-mono)"],
+       }
+  },
+}
+    };
+    </script>
+    <style>
+        :root {
+            --card: hsl(180 6.6667% 97.0588%);
+            --ring: hsl(166.76, 29.82%, 44.71%);
+            --input: hsl(35.29, 11.41%, 70.78%);
+            --muted: hsl(72, 12.82%, 84.71%);
+            --accent: hsl(292.13, 48.03%, 75.1%);
+            --border: hsl(35, 10.53%, 77.65%);
+            --radius: 0.875rem;
+            --shadow: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00), 0px 1px 2px -1px hsl(202.8169 89.1213% 53.1373% / 0.00);
+            --chart-1: hsl(203.8863 88.2845% 53.1373%);
+            --chart-2: hsl(159.7826 100% 36.0784%);
+            --chart-3: hsl(42.0290 92.8251% 56.2745%);
+            --chart-4: hsl(147.1429 78.5047% 41.9608%);
+            --chart-5: hsl(341.4894 75.2000% 50.9804%);
+            --popover: hsl(0 0% 100%);
+            --primary: hsl(165.65, 26.44%, 65.88%);
+            --sidebar: hsl(180 6.6667% 97.0588%);
+            --spacing: 0.25rem;
+            --font-mono: 'IBM Plex Mono', monospace;
+            --font-sans: 'Inter', sans-serif;
+            --secondary: hsl(0, 0%, 8.24%);
+            --background: hsl(70.91, 21.57%, 90%);
+            --font-serif: 'Source Serif Pro', serif;
+            --foreground: hsl(0, 0%, 8.24%);
+            --destructive: hsl(0.49, 54.19%, 55.49%);
+            --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
+            --sidebar-accent: hsl(211.5789 51.3514% 92.7451%);
+            --sidebar-border: hsl(205.0000 25.0000% 90.5882%);
+            --card-foreground: hsl(210 25% 7.8431%);
+            --sidebar-primary: hsl(203.8863 88.2845% 53.1373%);
+            --tracking-normal: 0em;
+            --muted-foreground: hsl(72, 2.39%, 40.98%);
+            --accent-foreground: hsl(0, 0%, 8.24%);
+            --popover-foreground: hsl(210 25% 7.8431%);
+            --primary-foreground: hsl(0, 0%, 8.24%);
+            --sidebar-foreground: hsl(210 25% 7.8431%);
+            --secondary-foreground: hsl(70.91, 21.57%, 90%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --sidebar-accent-foreground: hsl(203.8863 88.2845% 53.1373%);
+            --sidebar-primary-foreground: hsl(0 0% 100%);
+        }
+
+        .dark {
+            --card: hsl(228 9.8039% 10%);
+            --ring: hsl(202.8169 89.1213% 53.1373%);
+            --input: hsl(207.6923 27.6596% 18.4314%);
+            --muted: hsl(0 0% 9.4118%);
+            --accent: hsl(205.7143 70% 7.8431%);
+            --border: hsl(210 5.2632% 14.9020%);
+            --radius: 1.3rem;
+            --primary: hsl(203.7736 87.6033% 52.5490%);
+            --sidebar: hsl(228 9.8039% 10%);
+            --secondary: hsl(195.0000 15.3846% 94.9020%);
+            --background: hsl(0 0% 0%);
+            --foreground: hsl(200 6.6667% 91.1765%);
+            --destructive: hsl(356.3033 90.5579% 54.3137%);
+            --sidebar-ring: hsl(202.8169 89.1213% 53.1373%);
+            --sidebar-accent: hsl(205.7143 70% 7.8431%);
+            --sidebar-border: hsl(205.7143 15.7895% 26.0784%);
+            --card-foreground: hsl(0 0% 85.0980%);
+            --sidebar-primary: hsl(202.8169 89.1213% 53.1373%);
+            --muted-foreground: hsl(210 3.3898% 46.2745%);
+            --accent-foreground: hsl(203.7736 87.6033% 52.5490%);
+            --popover: hsl(0 0% 0%);
+            --popover-foreground: hsl(200 6.6667% 91.1765%);
+            --primary-foreground: hsl(0 0% 100%);
+            --sidebar-foreground: hsl(0 0% 85.0980%);
+            --secondary-foreground: hsl(210 25% 7.8431%);
+            --destructive-foreground: hsl(0 0% 100%);
+            --sidebar-accent-foreground: hsl(203.7736 87.6033% 52.5490%);
+            --sidebar-primary-foreground: hsl(0 0% 100%);
+        }
+
+        /* Custom animations for better UX */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200px 100%;
+            animation: shimmer 1.5s infinite;
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-background text-foreground min-h-screen">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md z-50">
+        Skip to main content
+    </a>
+
+    <!-- @COMPONENT: TopNavigation -->
+    <nav class="sticky top-0 z-40 bg-card/95 backdrop-blur-sm border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Home -->
+                <div class="flex items-center">
+                    <a href="#" class="flex items-center space-x-3 text-primary hover:text-primary/80 transition-colors">
+                        <i class="fas fa-gamepad text-2xl"></i>
+                        <span class="font-semibold text-lg hidden sm:block">Drayano Gauntlet</span>
+                    </a>
+                </div>
+
+                <!-- Main Navigation -->
+                <div class="hidden md:flex items-center space-x-1">
+                    <a href="#home" class="px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md transition-all">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                    <a href="#pokedex" class="px-3 py-2 text-sm font-medium text-primary bg-accent rounded-md">
+                        <i class="fas fa-book mr-2"></i>Pokédex
+                    </a>
+                    <a href="#encounters" class="px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md transition-all">
+                        <i class="fas fa-map mr-2"></i>Encounters
+                    </a>
+                    <a href="#trainers" class="px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md transition-all">
+                        <i class="fas fa-users mr-2"></i>Trainers
+                    </a>
+                </div>
+
+                <!-- Game Switcher -->
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-muted-foreground hidden sm:inline">Game:</span>
+                    <div class="flex bg-muted rounded-md p-1">
+                        <button class="px-3 py-1 text-xs font-medium bg-primary text-primary-foreground rounded-sm" data-game="FRO">FRO</button>
+                        <button class="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-sm transition-colors" data-game="SG">SG</button>
+                        <button class="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-sm transition-colors" data-game="RP">RP</button>
+                        <button class="px-3 py-1 text-xs font-medium text-muted-foreground hover:text-foreground rounded-sm transition-colors" data-game="VW2">VW2</button>
+                    </div>
+                </div>
+
+                <!-- Mobile menu button -->
+                <button class="md:hidden p-2 rounded-md text-foreground hover:text-primary hover:bg-accent" id="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div class="md:hidden bg-card border-t border-border" id="mobile-menu" style="display: none;">
+            <div class="px-4 py-2 space-y-1">
+                <a href="#home" class="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md">
+                    <i class="fas fa-home mr-2"></i>Home
+                </a>
+                <a href="#pokedex" class="block px-3 py-2 text-sm font-medium text-primary bg-accent rounded-md">
+                    <i class="fas fa-book mr-2"></i>Pokédex
+                </a>
+                <a href="#encounters" class="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md">
+                    <i class="fas fa-map mr-2"></i>Encounters
+                </a>
+                <a href="#trainers" class="block px-3 py-2 text-sm font-medium text-foreground hover:text-primary hover:bg-accent rounded-md">
+                    <i class="fas fa-users mr-2"></i>Trainers
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- @END_COMPONENT: TopNavigation -->
+
+    <!-- @COMPONENT: Breadcrumbs -->
+    <div class="bg-muted/30 border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
+            <nav class="flex items-center space-x-2 text-sm">
+                <a href="#home" class="text-muted-foreground hover:text-foreground transition-colors">Home</a>
+                <i class="fas fa-chevron-right text-muted-foreground text-xs"></i>
+                <span class="text-foreground font-medium">Pokédex</span>
+                <i class="fas fa-chevron-right text-muted-foreground text-xs"></i>
+                <span class="text-primary font-medium">Charizard</span>
+            </nav>
+        </div>
+    </div>
+    <!-- @END_COMPONENT: Breadcrumbs -->
+
+    <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- @COMPONENT: PokemonDetailView -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Pokemon Overview Card -->
+            <div class="lg:col-span-1">
+                <div class="bg-card border border-border rounded-lg p-6 space-y-6 fade-in">
+                    
+                    <!-- Pokemon Image and Basic Info -->
+                    <div class="text-center">
+                        <!-- Pokemon sprite placeholder -->
+                        <div class="w-32 h-32 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                            <i class="fas fa-dragon text-4xl text-muted-foreground"></i>
+                        </div>
+                        <h1 class="text-2xl font-bold text-foreground">Charizard</h1>
+                        <p class="text-muted-foreground">#006</p>
+                        
+                        <!-- Type badges -->
+                        <div class="flex justify-center space-x-2 mt-3">
+                            <span class="px-3 py-1 bg-red-500 text-white text-sm font-medium rounded-full">Fire</span>
+                            <span class="px-3 py-1 bg-blue-500 text-white text-sm font-medium rounded-full">Flying</span>
+                        </div>
+                    </div>
+
+                    <!-- Abilities -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-3">Abilities</h3>
+                        <div class="space-y-2">
+                            <div class="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                                <span class="font-medium">Blaze</span>
+                                <span class="text-sm text-muted-foreground">Normal</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-muted/30 rounded-md">
+                                <span class="font-medium">Solar Power</span>
+                                <span class="text-sm text-muted-foreground">Hidden</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Base Stats -->
+                    <div>
+                        <h3 class="text-lg font-semibold text-foreground mb-3">Base Stats</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">HP</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">78</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 52%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">Attack</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">84</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-red-500 h-2 rounded-full" style="width: 56%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">Defense</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">78</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 52%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">Sp. Atk</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">109</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-blue-500 h-2 rounded-full" style="width: 73%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">Sp. Def</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">85</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-purple-500 h-2 rounded-full" style="width: 57%"></div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="w-16 text-sm text-muted-foreground">Speed</span>
+                                <span class="w-8 text-sm font-mono text-right mr-3">100</span>
+                                <div class="flex-1 bg-muted rounded-full h-2">
+                                    <div class="bg-pink-500 h-2 rounded-full" style="width: 67%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learnset and Details -->
+            <div class="lg:col-span-2">
+                <div class="bg-card border border-border rounded-lg overflow-hidden fade-in">
+                    
+                    <!-- Tabs -->
+                    <div class="flex border-b border-border">
+                        <button class="px-6 py-4 text-sm font-medium bg-accent text-accent-foreground border-b-2 border-primary">
+                            Overview
+                        </button>
+                        <button class="px-6 py-4 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all">
+                            Learnset
+                        </button>
+                    </div>
+
+                    <!-- Tab Content: Overview -->
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Physical Characteristics -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-foreground mb-4">Physical Characteristics</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Height</span>
+                                        <span class="font-medium">1.7 m</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Weight</span>
+                                        <span class="font-medium">90.5 kg</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Category</span>
+                                        <span class="font-medium">Flame Pokémon</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Battle Mechanics -->
+                            <div>
+                                <h3 class="text-lg font-semibold text-foreground mb-4">Battle Mechanics</h3>
+                                <div class="space-y-3">
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Catch Rate</span>
+                                        <span class="font-medium">45</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Base Experience</span>
+                                        <span class="font-medium">267</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span class="text-muted-foreground">Growth Rate</span>
+                                        <span class="font-medium">Medium Slow</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Evolution Chain (Mock) -->
+                        <div class="mt-8">
+                            <h3 class="text-lg font-semibold text-foreground mb-4">Evolution Chain</h3>
+                            <div class="flex items-center justify-center space-x-4 p-4 bg-muted/30 rounded-lg">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-2">
+                                        <i class="fas fa-fire text-orange-500"></i>
+                                    </div>
+                                    <span class="text-sm font-medium">Charmander</span>
+                                    <div class="text-xs text-muted-foreground">Lv. 1</div>
+                                </div>
+                                <i class="fas fa-arrow-right text-muted-foreground"></i>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-muted rounded-lg flex items-center justify-center mb-2">
+                                        <i class="fas fa-fire text-red-500"></i>
+                                    </div>
+                                    <span class="text-sm font-medium">Charmeleon</span>
+                                    <div class="text-xs text-muted-foreground">Lv. 16</div>
+                                </div>
+                                <i class="fas fa-arrow-right text-muted-foreground"></i>
+                                <div class="text-center">
+                                    <div class="w-16 h-16 bg-primary/20 border-2 border-primary rounded-lg flex items-center justify-center mb-2">
+                                        <i class="fas fa-dragon text-primary"></i>
+                                    </div>
+                                    <span class="text-sm font-medium text-primary">Charizard</span>
+                                    <div class="text-xs text-primary">Lv. 36</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: PokemonDetailView -->
+
+        <!-- @COMPONENT: EncountersSection -->
+        <div class="mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
+            
+            <!-- Routes Sidebar -->
+            <div class="lg:col-span-1">
+                <div class="bg-card border border-border rounded-lg p-4">
+                    <h3 class="text-lg font-semibold text-foreground mb-4">Routes & Areas</h3>
+                    <div class="space-y-2 max-h-96 overflow-y-auto">
+                        <button class="w-full text-left p-3 bg-primary/10 text-primary border border-primary/20 rounded-md text-sm font-medium">
+                            Route 1
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Route 2
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Viridian Forest
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Route 3
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Mt. Moon
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Route 4
+                        </button>
+                        <button class="w-full text-left p-3 hover:bg-accent text-foreground rounded-md text-sm transition-colors">
+                            Route 5
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Encounters Table -->
+            <div class="lg:col-span-3">
+                <div class="bg-card border border-border rounded-lg overflow-hidden">
+                    <div class="p-6 border-b border-border">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h2 class="text-xl font-bold text-foreground">Route 1 Encounters</h2>
+                                <p class="text-muted-foreground text-sm">Wild Pokémon encounters and rates</p>
+                            </div>
+                            
+                            <!-- Method Filters -->
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-primary text-primary-foreground rounded-md text-sm font-medium">
+                                    Walking
+                                </button>
+                                <button class="px-3 py-1 bg-muted text-muted-foreground hover:bg-muted/80 rounded-md text-sm transition-colors">
+                                    Surfing
+                                </button>
+                                <button class="px-3 py-1 bg-muted text-muted-foreground hover:bg-muted/80 rounded-md text-sm transition-colors">
+                                    Fishing
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Encounters Table -->
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-muted/30">
+                                <tr>
+                                    <th class="text-left p-4 text-sm font-medium text-muted-foreground">Pokémon</th>
+                                    <th class="text-left p-4 text-sm font-medium text-muted-foreground">Type</th>
+                                    <th class="text-left p-4 text-sm font-medium text-muted-foreground">Level</th>
+                                    <th class="text-left p-4 text-sm font-medium text-muted-foreground">Rate</th>
+                                    <th class="text-left p-4 text-sm font-medium text-muted-foreground">Method</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-border">
+                                <tr class="hover:bg-muted/20 transition-colors">
+                                    <td class="p-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-paw text-brown-500"></i>
+                                            </div>
+                                            <span class="font-medium">Pidgey</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <div class="flex space-x-1">
+                                            <span class="px-2 py-1 bg-gray-500 text-white text-xs rounded">Normal</span>
+                                            <span class="px-2 py-1 bg-blue-400 text-white text-xs rounded">Flying</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="font-mono text-sm">2-5</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="font-mono text-sm">55%</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Walking</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-muted/20 transition-colors">
+                                    <td class="p-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-10 h-10 bg-muted rounded-lg flex items-center justify-center">
+                                                <i class="fas fa-mouse text-purple-500"></i>
+                                            </div>
+                                            <span class="font-medium">Rattata</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-gray-500 text-white text-xs rounded">Normal</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="font-mono text-sm">2-4</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="font-mono text-sm">45%</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">Walking</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: EncountersSection -->
+
+        <!-- @COMPONENT: TrainersSection -->
+        <div class="mt-12">
+            <div class="bg-card border border-border rounded-lg overflow-hidden">
+                <div class="p-6 border-b border-border">
+                    <h2 class="text-xl font-bold text-foreground">Elite Four & Champions</h2>
+                    <p class="text-muted-foreground text-sm">Challenging trainer battles and their teams</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+                    
+                    <!-- Trainer Card 1 -->
+                    <div class="bg-muted/30 border border-border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-red-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-fire text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-foreground">Flannery</h4>
+                                <p class="text-sm text-muted-foreground">Elite Four</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm text-muted-foreground">Location</span>
+                            <span class="text-sm font-medium">Indigo Plateau</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-muted-foreground">Level Cap</span>
+                            <span class="px-2 py-1 bg-destructive/20 text-destructive text-xs rounded font-mono">Lv.58</span>
+                        </div>
+
+                        <!-- Team Preview -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-fire text-red-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-fire text-red-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-fire text-red-500 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card 2 -->
+                    <div class="bg-muted/30 border border-border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-tint text-blue-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-foreground">Marlon</h4>
+                                <p class="text-sm text-muted-foreground">Elite Four</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm text-muted-foreground">Location</span>
+                            <span class="text-sm font-medium">Indigo Plateau</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-muted-foreground">Level Cap</span>
+                            <span class="px-2 py-1 bg-destructive/20 text-destructive text-xs rounded font-mono">Lv.58</span>
+                        </div>
+
+                        <!-- Team Preview -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-tint text-blue-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-tint text-blue-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-tint text-blue-500 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Trainer Card 3 -->
+                    <div class="bg-muted/30 border border-border rounded-lg p-4 hover:bg-muted/50 transition-all cursor-pointer">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-12 h-12 bg-yellow-500/20 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-crown text-yellow-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-foreground">Cynthia</h4>
+                                <p class="text-sm text-muted-foreground">Champion</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-sm text-muted-foreground">Location</span>
+                            <span class="text-sm font-medium">Indigo Plateau</span>
+                        </div>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-muted-foreground">Level Cap</span>
+                            <span class="px-2 py-1 bg-destructive/20 text-destructive text-xs rounded font-mono">Lv.62</span>
+                        </div>
+
+                        <!-- Team Preview -->
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-dragon text-purple-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-bolt text-yellow-500 text-sm"></i>
+                            </div>
+                            <div class="aspect-square bg-muted rounded flex items-center justify-center">
+                                <i class="fas fa-leaf text-green-500 text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: TrainersSection -->
+
+        <!-- @COMPONENT: ErrorHandling -->
+        <div class="mt-12 hidden" id="error-state">
+            <div class="bg-destructive/10 border border-destructive/20 rounded-lg p-6 text-center">
+                <i class="fas fa-exclamation-triangle text-destructive text-3xl mb-4"></i>
+                <h3 class="text-lg font-semibold text-destructive mb-2">Connection Error</h3>
+                <p class="text-muted-foreground mb-4">Unable to connect to the Pokémon database. Please check your connection and try again.</p>
+                <button class="bg-destructive text-destructive-foreground px-4 py-2 rounded-md font-medium hover:bg-destructive/90 transition-colors">
+                    <i class="fas fa-redo mr-2"></i>Try Again
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ErrorHandling -->
+
+        <!-- @COMPONENT: LoadingState -->
+        <div class="mt-12 hidden" id="loading-state">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="shimmer h-32 rounded mb-4"></div>
+                    <div class="shimmer h-4 rounded mb-2"></div>
+                    <div class="shimmer h-4 rounded w-3/4"></div>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="shimmer h-32 rounded mb-4"></div>
+                    <div class="shimmer h-4 rounded mb-2"></div>
+                    <div class="shimmer h-4 rounded w-3/4"></div>
+                </div>
+                <div class="bg-card border border-border rounded-lg p-6">
+                    <div class="shimmer h-32 rounded mb-4"></div>
+                    <div class="shimmer h-4 rounded mb-2"></div>
+                    <div class="shimmer h-4 rounded w-3/4"></div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: LoadingState -->
+
+    </main>
+
+    <!-- @COMPONENT: BackToTop -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 bg-primary text-primary-foreground w-12 h-12 rounded-full shadow-lg hover:bg-primary/90 transition-all transform translate-y-16 opacity-0" style="transition: all 0.3s ease;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+    <!-- @END_COMPONENT: BackToTop -->
+
+    <script>
+        (function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn?.addEventListener('click', function() {
+                const isVisible = mobileMenu.style.display !== 'none';
+                mobileMenu.style.display = isVisible ? 'none' : 'block';
+            });
+
+            // Game switcher
+            const gameButtons = document.querySelectorAll('[data-game]');
+            gameButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active state from all buttons
+                    gameButtons.forEach(btn => {
+                        btn.classList.remove('bg-primary', 'text-primary-foreground');
+                        btn.classList.add('text-muted-foreground', 'hover:text-foreground');
+                    });
+                    
+                    // Add active state to clicked button
+                    this.classList.add('bg-primary', 'text-primary-foreground');
+                    this.classList.remove('text-muted-foreground', 'hover:text-foreground');
+                    
+                    // TODO: Implement game switching logic
+                    console.log('Switched to game:', this.dataset.game);
+                });
+            });
+
+            // Back to top functionality
+            const backToTopBtn = document.getElementById('back-to-top');
+            
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTopBtn.style.transform = 'translateY(0)';
+                    backToTopBtn.style.opacity = '1';
+                } else {
+                    backToTopBtn.style.transform = 'translateY(16px)';
+                    backToTopBtn.style.opacity = '0';
+                }
+            });
+
+            backToTopBtn?.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            // Simulate loading states
+            function showLoadingState() {
+                document.getElementById('loading-state')?.classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('loading-state')?.classList.add('hidden');
+                }, 2000);
+            }
+
+            // Tab switching (mock)
+            const tabButtons = document.querySelectorAll('button[class*="px-6 py-4"]');
+            tabButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active state from all tabs
+                    tabButtons.forEach(btn => {
+                        btn.classList.remove('bg-accent', 'text-accent-foreground', 'border-b-2', 'border-primary');
+                        btn.classList.add('text-muted-foreground', 'hover:text-foreground', 'hover:bg-accent/50');
+                    });
+                    
+                    // Add active state to clicked tab
+                    this.classList.add('bg-accent', 'text-accent-foreground', 'border-b-2', 'border-primary');
+                    this.classList.remove('text-muted-foreground', 'hover:text-foreground', 'hover:bg-accent/50');
+                });
+            });
+
+            // Initialize fade-in animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.fade-in').forEach(el => {
+                observer.observe(el);
+            });
+
+            // TODO: Initialize Supabase client
+            // const supabaseUrl = 'https://cqmznchobvvltfvckmmr.supabase.co'
+            // const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY
+            // const supabase = createClient(supabaseUrl, supabaseKey)
+
+            // TODO: Implement preflight checks
+            function performPreflightChecks() {
+                // Check v_pokedex_app
+                // Check v_route_encounters_full  
+                // Check v_app_trainers_full
+                console.log('Preflight checks would run here');
+            }
+
+            // TODO: Implement data fetching functions
+            // async function fetchPokedexList(gameId) { ... }
+            // async function fetchPokedexDetail(gameId, formeId) { ... }
+            // async function fetchEncounters(gameId, routeId) { ... }
+            // async function fetchTrainers(gameId) { ... }
+
+        })();
+    </script>
+</body>
+</html>
