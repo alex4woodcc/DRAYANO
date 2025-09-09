@@ -26,6 +26,7 @@ import { InfoTooltip } from '@/components/ui/InfoTooltip';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import { Link } from 'wouter';
 
 /**
  * TrainerCard renders a summary card for a trainer including their sprite
@@ -236,12 +237,12 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
           )}
         </div>
 
-        {/* Team preview */}
+        {/* Team preview - clickable to trainer detail */}
+        <Link href={`/trainer/${trainer.trainer_id}?game=${currentGame}`}>
         <div className="flex flex-wrap gap-2">
           {team.slice(0, 6).map((member, index) => (
-            <Link
+            <div
               key={index}
-              href={`/pokemon/${member.forme_id}?game=${currentGame}`}
               className="relative rounded bg-muted p-1"
             >
               <Sprite
@@ -258,9 +259,10 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
                   Lv.{member.level}
                 </span>
               )}
-            </Link>
+            </div>
           ))}
         </div>
+        </Link>
 
         {/* Full team details */}
         <Accordion type="single" collapsible className="mt-2 border-t border-border/30 pt-2">

@@ -22,6 +22,7 @@ import PokemonDetail from "@/pages/PokemonDetail";
 import Encounters from "@/pages/Encounters";
 import Trainers from "@/pages/Trainers";
 import TrainersList from "@/pages/TrainersList";
+import TrainerDetail from "@/pages/TrainerDetail";
 import Preflight from "@/pages/Preflight";
 import Styleguide from "@/pages/Styleguide";
 import NotFound from "@/pages/not-found";
@@ -76,6 +77,7 @@ function AppContent() {
             <Route path="/encounters" component={Encounters} />
             <Route path="/trainers" component={Trainers} />
             <Route path="/trainers/list" component={TrainersList} />
+            <Route path="/trainer/:trainerId" component={TrainerDetail} />
             <Route path="/styleguide" component={Styleguide} />
             <Route component={NotFound} />
           </Switch>

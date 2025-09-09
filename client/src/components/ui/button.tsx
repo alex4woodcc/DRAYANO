@@ -1,53 +1,63 @@
 /**
- * Button component bridging the app's API with Bootstrap styles.
- * Semantic `variant` and `size` props map to Bootstrap classes such as
- * `btn-primary`, `btn-outline-secondary`, and `btn-sm`.
- * Focus states are enhanced via minimal custom CSS in `button.css`.
+ * @file Button component using pure Tailwind CSS with class-variance-authority.
+ * Provides semantic variants and sizes with consistent focus states and accessibility.
+ * Completely removes Bootstrap dependencies for a unified design system.
  */
 import React from 'react';
 import { Slot } from '@radix-ui/react-slot';
-import clsx from 'clsx';
-import './button.css';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const buttonVariants = cva(
+  // Base styles with focus-visible ring and smooth transitions
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  {
+    variants: {
+      variant: {
+        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
+        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2",
+        sm: "h-8 rounded-md px-3 text-xs",
+        lg: "h-10 rounded-md px-8",
+        icon: "h-9 w-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
+  }
+);
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  /** Visual style of the button mapped to Bootstrap variants. */
-  variant?: 'default' | 'secondary' | 'destructive' | 'outline' | 'ghost' | 'link';
-  /** Size of the button mapped to Bootstrap sizing utilities. */
-  size?: 'default' | 'sm' | 'lg' | 'icon';
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
   /** Render the underlying element from children when true. */
   asChild?: boolean;
 }
 
 /**
- * Maps `variant` and `size` to Bootstrap classes and renders either a native
- * `<button>` or the provided child element via `Slot`.
+ * Versatile Button component with semantic variants and consistent styling.
+ * Uses Tailwind utilities exclusively for maintainable theming.
  */
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ variant = 'default', size = 'default', className, asChild = false, ...props }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-
-    const variantClasses: Record<NonNullable<ButtonProps['variant']>, string> = {
-      default: 'btn-primary',
-      secondary: 'btn-secondary',
-      destructive: 'btn-danger',
-      outline: 'btn-outline-secondary',
-      ghost: 'btn-outline-secondary border-0',
-      link: 'btn-link',
-    };
-
-    const sizeClasses: Record<NonNullable<ButtonProps['size']>, string> = {
-      default: '',
-      sm: 'btn-sm',
-      lg: 'btn-lg',
-      icon: 'btn-icon',
-    };
-
-    const classes = clsx('btn', variantClasses[variant], sizeClasses[size], className);
-
-    return <Comp ref={ref} className={classes} {...props} />;
+  ({ className, variant, size, asChild = false, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
+    return (
+      <Comp
+        className={cn(buttonVariants({ variant, size, className }))}
+        ref={ref}
+        {...props}
+      />
+    );
   }
 );
-Button.displayName = 'Button';
+Button.displayName = "Button";
 
-export { Button };
+export { Button, buttonVariants };

@@ -38,30 +38,8 @@ export default function Trainers() {
 
       const { data, error } = await query;
       if (error) throw error;
-      const baseRows: any[] = Array.isArray(data) ? data : [];
-
-      const missingSpriteIds = Array.from(
-        new Set(baseRows.filter((t) => !t.sprite_url).map((t) => t.trainer_id))
-      );
-
-      if (missingSpriteIds.length > 0) {
-        const { data: spriteRows, error: spriteError } = await supabase
-          .from('trainers')
-          .select('id, sprite_url')
-          .in('id', missingSpriteIds)
-          .eq('game_id', currentGame);
-        if (spriteError) throw spriteError;
-        const spriteMap = new Map<string, string | null>(
-          (spriteRows ?? []).map((r) => [r.id, r.sprite_url])
-        );
-        baseRows.forEach((row) => {
-          if (!row.sprite_url) {
-            row.sprite_url = spriteMap.get(row.trainer_id) || undefined;
-          }
-        });
-      }
-
-      return baseRows.filter(
+      
+      return (Array.isArray(data) ? data : []).filter(
         (r) => typeof r.trainer_id === 'string' && typeof r.trainer_name === 'string'
       ) as Trainer[];
     },

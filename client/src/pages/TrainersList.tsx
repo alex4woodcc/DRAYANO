@@ -98,44 +98,14 @@ export default function TrainersList() {
       const to = from + perPage - 1;
       const { data, error, count } = await query.range(from, to);
       if (error) throw error;
-      const baseRows: any[] = Array.isArray(data) ? data : [];
-
-      // Some rows in the view omit `sprite_url`. Query the base `trainers`
-      // table for any missing sprites and merge them into the result set so
-      // every trainer renders with an icon.
-      const missingSpriteIds = Array.from(
-        new Set(
-          baseRows.filter((t) => !t.sprite_url).map((t) => t.trainer_id)
-        )
-      );
-
-      if (missingSpriteIds.length > 0) {
-        const { data: spriteRows, error: spriteError } = await supabase
-          .from('trainers')
-          .select('id, sprite_url')
-          .in('id', missingSpriteIds)
-          .eq('game_id', currentGame);
-
-        if (spriteError) throw spriteError;
-
-        const spriteMap = new Map<string, string | null>(
-          (spriteRows ?? []).map((r) => [r.id, r.sprite_url])
-        );
-
-        baseRows.forEach((row) => {
-          if (!row.sprite_url) {
-            row.sprite_url = spriteMap.get(row.trainer_id) || undefined;
-          }
-        });
-      }
-
-      // Basic runtime guards to ensure required fields exist
-      const filtered = baseRows.filter(
-        (r) => typeof r.trainer_id === 'string' && typeof r.trainer_name === 'string'
-      ) as Trainer[];
-      return { items: filtered, total: count || 0 };
-    },
-  });
+        
+        // Basic runtime guards to ensure required fields exist
+        const filtered = (Array.isArray(data) ? data : []).filter(
+          (r) => typeof r.trainer_id === 'string' && typeof r.trainer_name === 'string'
+        ) as Trainer[];
+        return { items: filtered, total: count || 0 };
+      },
+    });
 
   const trainers = data?.items ?? [];
   const totalPages = Math.max(1, Math.ceil((data?.total || 0) / perPage));
