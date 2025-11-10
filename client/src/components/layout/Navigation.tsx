@@ -8,7 +8,7 @@ import { Link, useLocation } from "wouter";
 import { useEffect, useState, type CSSProperties } from "react";
 import { GameSwitcher } from "@/components/ui/game-switcher";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { Home, Book, Map, Users } from "lucide-react";
+import { Chrome as Home, Book, Map, Users } from "lucide-react";
 import { useGame } from "@/hooks/use-game";
 import { useGames } from "@/hooks/use-games";
 import type { GameId } from "@/types/database";
