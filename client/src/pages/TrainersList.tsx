@@ -68,36 +68,6 @@ export default function TrainersList() {
         .eq('game_id', currentGame);
 
       // Apply search filter
-      if (search.trim()) {
-        query = query.or(
-          `trainer_name.ilike.%${search.trim()}%,trainer_class.ilike.%${search.trim()}%,display_location.ilike.%${search.trim()}%`
-        );
-      }
-
-      // Apply trainer type filter
-      if (trainerTypeFilter === 'champion') {
-        query = query.eq('is_leader', true).eq('trainer_class', 'Champion');
-      } else if (trainerTypeFilter === 'leader') {
-        query = query.eq('is_leader', true);
-      } else if (trainerTypeFilter === 'regular') {
-        query = query.eq('is_leader', false);
-      }
-
-      // Scope to a specific story split when provided via query string
-      if (split) {
-        query = query.eq('split', split);
-      }
-
-      // Order by split group, then split order, then trainer order
-      query = query
-        .order('split_group_order', { nullsFirst: false })
-        .order('split_order', { nullsFirst: false })
-        .order('split_trainer_order', { nullsFirst: false });
-
-      const from = (page - 1) * perPage;
-      const to = from + perPage - 1;
-      const { data, error, count } = await query.range(from, to);
-      if (error) throw error;
         
         // Basic runtime guards to ensure required fields exist
         const filtered = (Array.isArray(data) ? data : []).filter(

@@ -27,6 +27,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { Link } from 'wouter';
+import { Link } from 'wouter';
 
 /**
  * TrainerCard renders a summary card for a trainer including their sprite
@@ -239,11 +240,11 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
 
         {/* Team preview - clickable to trainer detail */}
         <Link href={`/trainer/${trainer.trainer_id}?game=${currentGame}`}>
+        <Link href={`/trainer/${trainer.trainer_id}?game=${currentGame}`}>
         <div className="flex flex-wrap gap-2">
           {team.slice(0, 6).map((member, index) => (
             <div
               key={index}
-              className="relative rounded bg-muted p-1"
             >
               <Sprite
                 src={member.sprite_default_url}
@@ -260,8 +261,9 @@ export function TrainerCard({ trainer }: TrainerCardProps) {
                 </span>
               )}
             </div>
-          ))}
+            </div>
         </div>
+        </Link>
         </Link>
 
         {/* Full team details */}

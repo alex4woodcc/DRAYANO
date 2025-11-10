@@ -33,23 +33,17 @@ export function BackToTop() {
     <Button
       onClick={scrollToTop}
       size="icon"
+      variant="default"
       aria-label="Back to top"
-      style={{
-        position: 'fixed',
-        bottom: '1.5rem',
-        right: '1.5rem',
-        width: '3rem',
-        height: '3rem',
-        boxShadow: 'var(--bs-box-shadow-lg)',
-        transition: 'opacity 0.3s, transform 0.3s',
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(4rem)',
-        pointerEvents: isVisible ? 'auto' : 'none',
-        zIndex: 50,
-      }}
+      className={cn(
+        "fixed bottom-6 right-6 w-12 h-12 shadow-lg transition-all duration-300 z-50",
+        isVisible 
+          ? "opacity-100 translate-y-0 pointer-events-auto" 
+          : "opacity-0 translate-y-16 pointer-events-none"
+      )}
       data-testid="back-to-top"
     >
-      <ArrowUp style={{ width: '1rem', height: '1rem' }} />
+      <ArrowUp className="w-4 h-4" />
     </Button>
   );
 }

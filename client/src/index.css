@@ -251,11 +251,6 @@ h3,
 /* Enhanced card hover states */
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-}
-
-[data-bs-theme="dark"] .card:hover {
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 /* Loading skeleton improvements */
@@ -317,12 +312,8 @@ html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; 
 }
 
 /* Ensure tap targets are at least 44x44px */
-.btn, button, [role="button"] {
+button, [role="button"] {
   min-height: 44px;
-}
-
-.btn-sm {
-  min-height: 38px;
 }
 
 /* Improved table responsiveness */

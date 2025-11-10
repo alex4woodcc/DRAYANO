@@ -47,9 +47,13 @@ const PaginationLink = ({
   <a
     aria-current={isActive ? "page" : undefined}
     className={cn(
-      "btn",
-      isActive ? "btn-outline-secondary" : "btn-link",
-      size === "sm" ? "btn-sm" : size === "lg" ? "btn-lg" : size === "icon" ? "btn-icon" : "",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+      isActive 
+        ? "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground" 
+        : "text-primary underline-offset-4 hover:underline",
+      size === "sm" ? "h-8 rounded-md px-3 text-xs" : 
+      size === "lg" ? "h-10 rounded-md px-8" : 
+      size === "icon" ? "h-9 w-9" : "h-9 px-4 py-2",
       className
     )}
     {...props}

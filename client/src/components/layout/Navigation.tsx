@@ -139,7 +139,7 @@ export function Navigation() {
           <ThemeToggle />
         </div>
       </div>
-    </div>
+    </nav>
     </nav>
   );
 }

@@ -23,7 +23,7 @@ function Calendar({
         caption_label: "text-sm font-medium",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          "btn btn-outline-secondary btn-sm p-0 bg-transparent border-0 opacity-50",
+          "inline-flex h-7 w-7 items-center justify-center rounded-md border border-input bg-transparent p-0 text-sm shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           "hover:opacity-100"
         ),
         nav_button_previous: "absolute left-1",
@@ -35,7 +35,7 @@ function Calendar({
         row: "flex w-full mt-2",
         cell: "h-9 w-9 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
-          "btn btn-outline-secondary border-0 btn-sm h-9 w-9 p-0 font-normal",
+          "inline-flex h-9 w-9 items-center justify-center rounded-md border-0 bg-transparent p-0 text-sm font-normal shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           "aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",
